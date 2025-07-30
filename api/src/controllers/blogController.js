@@ -1,4 +1,5 @@
 const BlogPost = require('../models/BlogPost');
+const { uploadImage } = require('../config/cloudinary');
 const { catchAsync, AppError } = require('../middleware/error/errorHandler');
 const logger = require('../config/logger');
 
@@ -268,26 +269,40 @@ const addComment = catchAsync(async (req, res, next) => {
 // @route   POST /api/v1/blog/upload
 // @access  Private (Admin)
 const uploadImage = catchAsync(async (req, res, next) => {
-  // Simulation d'upload d'image
-  // En production, utilisez un service comme Cloudinary, AWS S3, etc.
-  
   if (!req.file) {
     return next(new AppError('Aucun fichier fourni', 400));
   }
 
-  // Simulation d'URL d'image uploadée
-  const imageUrl = `https://images.pexels.com/photos/${Math.floor(Math.random() * 1000000)}/pexels-photo.jpeg?auto=compress&cs=tinysrgb&w=800`;
+  try {
+    const result = await uploadImage(req.file, {
+      folder: 'leonce-studio/blog',
+      use_filename: true,
+      unique_filename: true,
+      transformation: [
+        { width: 1200, height: 800, crop: 'fill' },
+        { quality: 'auto:good' },
+        { fetch_format: 'auto' }
+      ]
+    });
 
-  logger.info(`Image uploaded for blog by ${req.user.email}`);
+    logger.info(`Blog image uploaded: ${result.public_id} by ${req.user.email}`);
 
-  res.status(200).json({
-    success: true,
-    message: 'Image uploadée avec succès',
-    data: {
-      url: imageUrl,
-      filename: req.file.originalname
-    }
-  });
+    res.status(200).json({
+      success: true,
+      message: 'Image uploadée avec succès',
+      data: {
+        url: result.url,
+        public_id: result.public_id,
+        width: result.width,
+        height: result.height,
+        format: result.format,
+        bytes: result.bytes
+      }
+    });
+  } catch (error) {
+    logger.error('Blog image upload failed:', error);
+    return next(new AppError('Erreur lors de l\'upload de l\'image', 500));
+  }
 });
 
 // @desc    Obtenir les statistiques du blog (Admin)

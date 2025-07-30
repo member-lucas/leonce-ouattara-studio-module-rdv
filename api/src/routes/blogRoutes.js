@@ -17,6 +17,7 @@ const {
 const { authenticate, authorize, optionalAuth } = require('../middleware/auth/auth');
 const { validate, commonSchemas } = require('../middleware/validation/validation');
 const { publicLimiter } = require('../config/rateLimiter');
+const { uploadSingle, optimizeImage, cleanupTempFiles } = require('../middleware/upload');
 const Joi = require('joi');
 
 const router = express.Router();
@@ -107,7 +108,12 @@ router.use(authorize('admin'));
 router.post('/', validate(blogSchemas.create), createBlogPost);
 router.put('/:id', validate(commonSchemas.mongoId, 'params'), validate(blogSchemas.update), updateBlogPost);
 router.delete('/:id', validate(commonSchemas.mongoId, 'params'), deleteBlogPost);
-router.post('/upload', uploadImage);
+router.post('/upload', 
+  uploadSingle('image'),
+  optimizeImage,
+  cleanupTempFiles,
+  uploadImage
+);
 router.get('/admin/stats', getBlogStats);
 
 module.exports = router;

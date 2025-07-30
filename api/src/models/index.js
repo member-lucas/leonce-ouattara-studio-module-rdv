@@ -6,6 +6,7 @@ const Contact = require('./Contact');
 const Newsletter = require('./Newsletter');
 const Appointment = require('./Appointment');
 const ChatMessage = require('./ChatMessage');
+const SiteSetting = require('./SiteSetting');
 
 module.exports = {
   User,
@@ -14,5 +15,6 @@ module.exports = {
   Contact,
   Newsletter,
   Appointment,
-  ChatMessage
+  ChatMessage,
+  SiteSetting
 };

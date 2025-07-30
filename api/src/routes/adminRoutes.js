@@ -18,7 +18,17 @@ const {
   updateProject,
   deleteProject
 } = require('../controllers/projectController');
+const {
+  getAllSettings,
+  getSetting,
+  createSetting,
+  updateSetting,
+  updateMultipleSettings,
+  deleteSetting,
+  resetToDefaults
+} = require('../controllers/siteSettingsController');
 const { validate, commonSchemas, projectSchemas } = require('../middleware/validation/validation');
+const Joi = require('joi');
 
 const router = express.Router();
 
@@ -84,6 +94,47 @@ router.delete('/projects/:id',
   sensitiveActionProtection,
   auditAdminAction('delete_project'),
   deleteProject
+);
+
+// Gestion des paramètres du site
+router.get('/settings', 
+  auditAdminAction('list_settings'),
+  getAllSettings
+);
+
+router.get('/settings/:key', 
+  validate(Joi.object({ key: Joi.string().required() }), 'params'),
+  auditAdminAction('view_setting'),
+  getSetting
+);
+
+router.post('/settings', 
+  auditAdminAction('create_setting'),
+  createSetting
+);
+
+router.put('/settings/:key', 
+  validate(Joi.object({ key: Joi.string().required() }), 'params'),
+  auditAdminAction('update_setting'),
+  updateSetting
+);
+
+router.put('/settings/bulk/update', 
+  auditAdminAction('bulk_update_settings'),
+  updateMultipleSettings
+);
+
+router.delete('/settings/:key', 
+  validate(Joi.object({ key: Joi.string().required() }), 'params'),
+  sensitiveActionProtection,
+  auditAdminAction('delete_setting'),
+  deleteSetting
+);
+
+router.post('/settings/reset', 
+  sensitiveActionProtection,
+  auditAdminAction('reset_settings'),
+  resetToDefaults
 );
 
 // Logs et monitoring (actions sensibles)
