@@ -1,3 +1,4 @@
+// components/Navigation.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -118,9 +119,9 @@ const Navigation = () => {
                 <div className={`relative bg-gradient-to-r from-[#00F5FF] to-[#9D4EDD] rounded-lg flex items-center justify-center transition-all duration-300 ${
                   isScrolled ? 'w-10 h-10' : 'w-12 h-12'
                 }`}>
-                  <Code className={`text-white transition-all duration-300 ${
-                    isScrolled ? 'w-5 h-5' : 'w-6 h-6'
-                  } group-hover:rotate-12`} />
+                  <span className={`text-white font-bold transition-all duration-300 ${
+                    isScrolled ? 'text-xl' : 'text-2xl'
+                  }`}>LOS</span>
                 </div>
               </div>
               
