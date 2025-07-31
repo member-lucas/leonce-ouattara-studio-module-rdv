@@ -1,14 +1,15 @@
+// app/admin/layout.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { 
-  LayoutDashboard, 
-  FileText, 
-  FolderOpen, 
-  MessageSquare, 
-  Settings, 
-  Upload, 
+import {
+  LayoutDashboard,
+  FileText,
+  FolderOpen,
+  MessageSquare,
+  Settings,
+  Upload,
   Users,
   LogOut,
   Menu,
@@ -38,46 +39,51 @@ export default function AdminLayout({
   const router = useRouter();
   const pathname = usePathname();
 
+  // Si nous sommes sur la page de connexion, ne pas appliquer le layout admin
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
+
   const menuItems = [
-    { 
-      icon: <LayoutDashboard className="w-5 h-5" />, 
-      label: 'Dashboard', 
+    {
+      icon: <LayoutDashboard className="w-5 h-5" />,
+      label: 'Dashboard',
       href: '/admin/dashboard',
       active: pathname === '/admin/dashboard'
     },
-    { 
-      icon: <FolderOpen className="w-5 h-5" />, 
-      label: 'Projets', 
+    {
+      icon: <FolderOpen className="w-5 h-5" />,
+      label: 'Projets',
       href: '/admin/projects',
       active: pathname.startsWith('/admin/projects')
     },
-    { 
-      icon: <FileText className="w-5 h-5" />, 
-      label: 'Blog', 
+    {
+      icon: <FileText className="w-5 h-5" />,
+      label: 'Blog',
       href: '/admin/blog',
       active: pathname.startsWith('/admin/blog')
     },
-    { 
-      icon: <MessageSquare className="w-5 h-5" />, 
-      label: 'Contacts', 
+    {
+      icon: <MessageSquare className="w-5 h-5" />,
+      label: 'Contacts',
       href: '/admin/contacts',
       active: pathname.startsWith('/admin/contacts')
     },
-    { 
-      icon: <Upload className="w-5 h-5" />, 
-      label: 'Médias', 
+    {
+      icon: <Upload className="w-5 h-5" />,
+      label: 'Médias',
       href: '/admin/media',
       active: pathname.startsWith('/admin/media')
     },
-    { 
-      icon: <Users className="w-5 h-5" />, 
-      label: 'Utilisateurs', 
+    {
+      icon: <Users className="w-5 h-5" />,
+      label: 'Utilisateurs',
       href: '/admin/users',
       active: pathname.startsWith('/admin/users')
     },
-    { 
-      icon: <Settings className="w-5 h-5" />, 
-      label: 'Configuration', 
+    {
+      icon: <Settings className="w-5 h-5" />,
+      label: 'Configuration',
       href: '/admin/settings',
       active: pathname.startsWith('/admin/settings')
     }
@@ -149,7 +155,7 @@ export default function AdminLayout({
       <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-gray-900/95 backdrop-blur-sm border-r border-gray-700/50 transform transition-transform duration-300 ${
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } lg:translate-x-0`}>
-        
+
         {/* Logo */}
         <div className="flex items-center justify-between p-6 border-b border-gray-700/50">
           <div className="flex items-center space-x-3">
@@ -210,7 +216,7 @@ export default function AdminLayout({
 
       {/* Main Content */}
       <div className={`transition-all duration-300 ${isSidebarOpen ? 'lg:ml-64' : ''}`}>
-        
+
         {/* Top Bar */}
         <header className="bg-gray-900/50 backdrop-blur-sm border-b border-gray-700/50 px-6 py-4">
           <div className="flex items-center justify-between">
@@ -221,7 +227,7 @@ export default function AdminLayout({
               >
                 <Menu className="w-5 h-5" />
               </button>
-              
+
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
@@ -237,7 +243,7 @@ export default function AdminLayout({
                 <Bell className="w-5 h-5" />
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
               </button>
-              
+
               <div className="flex items-center space-x-2 text-sm">
                 <span className="text-gray-400">Connecté en tant que</span>
                 <span className="text-[#00F5FF] font-medium">{user.role}</span>
@@ -254,7 +260,7 @@ export default function AdminLayout({
 
       {/* Mobile Overlay */}
       {isSidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
